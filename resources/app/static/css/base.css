@@ -144,7 +144,7 @@ section.small {
 }
 
 #weather.small .icon {
-    font-size: 3em;
+    font-size: 2em;
 }
 
 #weather.small .temperature .value {
@@ -154,4 +154,17 @@ section.small {
 #weather.small .temperature .unit {
     font-size: 1em;
 }
+@keyframes wakemeup {
+    from {
+        transform: rotate(-30deg)
+    }
+    to {
+        transform: rotate(30deg)
+    }
+}
 
+#wakeup {
+    font-size: 10em;
+    color: #f00;
+    animation: wakemeup 500ms linear 0s infinite alternate;
+}

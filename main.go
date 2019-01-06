@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+	"runtime"
 	"flag"
 	"github.com/asticode/go-astilectron"
 	"github.com/asticode/go-astilectron-bootstrap"
@@ -30,6 +32,16 @@ func main() {
 			AppName:            AppName,
 		},
 		Debug:         true,
+		OnWait: func(_ *astilectron.Astilectron, ws []*astilectron.Window, _ *astilectron.Menu, _ *astilectron.Tray, _ *astilectron.Menu) error {
+			w := ws[0]
+			w.OpenDevTools()
+
+			go func() {
+				time.Sleep(5 * time.Second)
+				bootstrap.SendMessage(w, "alarm.wakeup", nil)
+			}()
+			return nil
+		},
 		RestoreAssets: RestoreAssets,
 		Windows: []*bootstrap.Window{{
 			Homepage:       "index.html",
@@ -40,7 +52,7 @@ func main() {
 				Height:          astilectron.PtrInt(360),
 				Width:           astilectron.PtrInt(480),
 				AlwaysOnTop:	 astilectron.PtrBool(true),
-				Fullscreen:		 astilectron.PtrBool(true),
+				Fullscreen:		 astilectron.PtrBool(runtime.GOOS != "windows"),
 			},
 		}},
 	}); err != nil {

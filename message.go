@@ -6,6 +6,11 @@ import (
 )
 
 // handleMessages handles messages
-func handleMessages(_ *astilectron.Window, m bootstrap.MessageIn) (payload interface{}, err error) {
-	return nil, nil
+func handleMessages(w *astilectron.Window, m bootstrap.MessageIn) (payload interface{}, err error) {
+	switch m.Name {
+	case "test.alarm":
+		bootstrap.SendMessage(w, "alarm.wakeup", nil)
+		return
+	}
+	return
 }

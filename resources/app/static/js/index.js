@@ -1,3 +1,4 @@
+
 let index = {
     init: () => {
         // Init
@@ -10,6 +11,11 @@ let index = {
             // Listen
             index.listen();
             index.displayDateTime();
+
+
+            document.getElementById("nexttime").onclick = () => 
+                astilectron.sendMessage({name:"test.alarm"});
+
         })
     },
     displayDateTime: () => {
@@ -28,6 +34,16 @@ let index = {
         }
     },
     listen: () => {
-
+        astilectron.onMessage(async message => {
+            switch (message.name) {
+                case "alarm.wakeup":
+                    alarm.wakeup();
+                    break;
+                case "alarm.next":
+                    break;
+                default:
+                    return;
+            }
+        });
     }
 };
