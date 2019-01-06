@@ -2,24 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="static/css/base.css"/>
+    <link rel="stylesheet" href="static/lib/astiloader/astiloader.css">
+    <link rel="stylesheet" href="static/lib/astimodaler/astimodaler.css">
+    <link rel="stylesheet" href="static/lib/astinotifier/astinotifier.css">
+    <link rel="stylesheet" href="static/lib/fontawesome/css/all.min.css">
 </head>
 <body>
-    <div id="time">
-        <div id="header">
-            <div id="date">
-                <time>01/01/1970</time>
+    <div class="container">
+        <div class="container left">
+            <div id="time" class="big">
+                <div id="header">
+                    <div id="date">
+                        <time>01/01/1970</time>
+                    </div>
+                    <div id="brightness">
+                        <i class="fas fa-adjust"></i>
+                    </div>
+                    <div id="settings">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                </div>
+                <div id="main">20:13</div>
+                <div id="reminders"></div>
             </div>
-            <div id="brightness"></div>
-            <div id="settings"></div>
+            <div id="music" class="large"></div>
         </div>
-        <div id="main">20:13</div>
-        <div id="reminders"></div>
+        <div class="container right">
+            <div id="alarms" class="small">
+            </div>
+            <div id="weather" class="small"></div>
+            <div id="news"class="small"></div>
+        </div>
     </div>
-    <div id="alarms">
-    </div>
-    <div id="weather"></div>
-    <div id="music"></div>
-    <div id="news"></div>
+
 </body>
 </html>
