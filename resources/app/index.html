@@ -1,42 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="static/css/base.css"/>
+    <link rel="stylesheet" href="static/css/base.css" />
     <link rel="stylesheet" href="static/lib/astiloader/astiloader.css">
     <link rel="stylesheet" href="static/lib/astimodaler/astimodaler.css">
     <link rel="stylesheet" href="static/lib/astinotifier/astinotifier.css">
     <link rel="stylesheet" href="static/lib/fontawesome/css/all.min.css">
 </head>
-<body>
+
+<body class="day">
     <div class="container">
         <div class="container left">
-            <div id="time" class="big">
-                <div id="header">
+            <section id="time" class="big">
+                <header id="header">
                     <div id="date">
                         <time>01/01/1970</time>
+                    </div>
+                    <div id="display" onclick="index.switchDisplay()">
+                        <i class="fas fa-moon"></i>
+                        <i class="far fa-sun"></i>
                     </div>
                     <div id="brightness">
                         <i class="fas fa-adjust"></i>
                     </div>
+                    <div id="volume">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
                     <div id="settings">
                         <i class="fas fa-cogs"></i>
                     </div>
+
+                </header>
+                <div id="main">
+                    <span id="clock">20:13</span>
                 </div>
-                <div id="main">20:13</div>
-                <div id="reminders"></div>
-            </div>
-            <div id="music" class="large"></div>
+                <div id="reminders">
+                </div>
+            </section>
+            <section id="music" class="large">
+                <header>
+                    <div>
+                        <i class="fas fa-music"></i>
+                    </div>
+                </header>
+            </section>
         </div>
         <div class="container right">
-            <div id="alarms" class="small">
-            </div>
-            <div id="weather" class="small"></div>
-            <div id="news"class="small"></div>
+            <section id="alarms" class="small">
+                <header>
+                    <i class="fas fa-bell"></i>
+                    <span>Prochaine</span>
+                </header>
+                <div class="next">
+                    <div id="nextdate">
+                        Demain
+                    </div>
+                    <div id="nexttime">
+                        07:00
+                    </div>
+                </div>
+                <div class="all">
+                </div>
+            </section>
+            <section id="weather" class="small">
+                <header>
+                    <span>Meteo</span>
+                </header>
+
+                <div class="icon">
+                    <i class="fas fa-cloud-sun-rain"></i>
+                </div>
+                <div class="temperature">
+                    <span class="value">12</span>
+                    <span class="unit">*C</span>
+                </div>
+            </section>
+            <section id="news" class="small">
+                <header>
+                    <i class="far fa-newspaper"></i> News
+                </header>
+            </section>
         </div>
     </div>
-
+    <script src="static/js/index.js"></script>
+    <script src="static/lib/astiloader/astiloader.js"></script>
+    <script src="static/lib/astinotifier/astinotifier.js"></script>
+    <script src="static/lib/astimodaler/astimodaler.js"></script>
+    <script type="text/javascript">
+        index.init();
+    </script>
 </body>
+
 </html>

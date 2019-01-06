@@ -12,3 +12,7 @@
 *.out
 
 .vscode
+output
+bind_linux_arm\.go
+
+bind_windows_amd64\.go

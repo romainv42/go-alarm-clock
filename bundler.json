@@ -1,0 +1,7 @@
+{
+    "app_name": "Alarm Clock",
+    "environments": [
+        {"arch": "arm", "os": "linux"},
+        {"arch": "amd64", "os": "windows"}
+      ]
+}

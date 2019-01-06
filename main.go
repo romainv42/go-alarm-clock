@@ -2,75 +2,34 @@ package main
 
 import (
 	"flag"
-	"time"
-
-	"encoding/json"
-
 	"github.com/asticode/go-astilectron"
 	"github.com/asticode/go-astilectron-bootstrap"
-	"github.com/asticode/go-astilog"
-	"github.com/pkg/errors"
-)
 
-// Constants
-const htmlAbout = `Welcome on <b>Astilectron</b> demo!<br>
-This is using the bootstrap and the bundler.`
+	"github.com/asticode/go-astilog"
+)
 
 // Vars
 var (
 	AppName string
 	BuiltAt string
 	debug   = flag.Bool("d", false, "enables the debug mode")
-	w       *astilectron.Window
 )
 
 func main() {
 	// Init
 	flag.Parse()
+	astilog.Out(astilog.Configuration{
+		Out: astilog.OutStdOut,
+	})
 	astilog.FlagInit()
 
 	// Run bootstrap
-	astilog.Debugf("Running app built at %s", BuiltAt)
 	if err := bootstrap.Run(bootstrap.Options{
-		Asset:    Asset,
-		AssetDir: AssetDir,
+		Asset: Asset,
 		AstilectronOptions: astilectron.Options{
 			AppName:            AppName,
 		},
-		Debug: *debug,
-		MenuOptions: []*astilectron.MenuItemOptions{{
-			Label: astilectron.PtrStr("File"),
-			SubMenu: []*astilectron.MenuItemOptions{
-				{
-					Label: astilectron.PtrStr("About"),
-					OnClick: func(e astilectron.Event) (deleteListener bool) {
-						if err := bootstrap.SendMessage(w, "about", htmlAbout, func(m *bootstrap.MessageIn) {
-							// Unmarshal payload
-							var s string
-							if err := json.Unmarshal(m.Payload, &s); err != nil {
-								astilog.Error(errors.Wrap(err, "unmarshaling payload failed"))
-								return
-							}
-							astilog.Infof("About modal has been displayed and payload is %s!", s)
-						}); err != nil {
-							astilog.Error(errors.Wrap(err, "sending about event failed"))
-						}
-						return
-					},
-				},
-				{Role: astilectron.MenuItemRoleClose},
-			},
-		}},
-		OnWait: func(_ *astilectron.Astilectron, ws []*astilectron.Window, _ *astilectron.Menu, _ *astilectron.Tray, _ *astilectron.Menu) error {
-			w = ws[0]
-			go func() {
-				time.Sleep(5 * time.Second)
-				if err := bootstrap.SendMessage(w, "check.out.menu", "Don't forget to check out the menu!"); err != nil {
-					astilog.Error(errors.Wrap(err, "sending check.out.menu event failed"))
-				}
-			}()
-			return nil
-		},
+		Debug:         true,
 		RestoreAssets: RestoreAssets,
 		Windows: []*bootstrap.Window{{
 			Homepage:       "index.html",
@@ -78,11 +37,13 @@ func main() {
 			Options: &astilectron.WindowOptions{
 				BackgroundColor: astilectron.PtrStr("#333"),
 				Center:          astilectron.PtrBool(true),
-				Height:          astilectron.PtrInt(700),
-				Width:           astilectron.PtrInt(700),
+				Height:          astilectron.PtrInt(360),
+				Width:           astilectron.PtrInt(480),
+				AlwaysOnTop:	 astilectron.PtrBool(true),
+				Fullscreen:		 astilectron.PtrBool(true),
 			},
 		}},
 	}); err != nil {
-		astilog.Fatal(errors.Wrap(err, "running bootstrap failed"))
+		astilog.Fatal(err)
 	}
 }

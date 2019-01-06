@@ -4,11 +4,59 @@
 }
 
 html, body {
-    background-color: #fff;
-    color: #333;
     height: 100vh;
     margin: 0;
     width: 100vw;
+}
+
+@keyframes gotoday {
+    from   {
+        background-color: #000;
+        color: #ccc;
+    }
+    to   {
+        background-color: #fff;
+        color: #333;
+    }
+}
+
+@keyframes gotonight {
+    from   {
+        background-color: #fff;
+        color: #333;
+    }
+    to   {
+        background-color: #000;
+        color: #ccc;
+    }
+}
+
+body.day {
+    animation-name: gotoday;
+    animation-duration: 1s;
+    background-color: #fff;
+    color: #333;
+}
+
+body.night {
+    animation-name: gotonight;
+    animation-duration: 1s;
+    background-color: #000;
+    color: #ccc;
+}
+
+body.day #display .fa-moon {
+    display: block;
+}
+body.day #display .fa-sun {
+    display: none;
+}
+
+body.night #display .fa-moon {
+    display: none;
+}
+body.night #display .fa-sun {
+    display: block;
 }
 
 div {
@@ -16,13 +64,16 @@ div {
     text-align: center;
 }
 
-.container {
+.container, section {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     flex-direction: row;
 }
 
+section.small {
+    flex-direction: column;
+}
 .left, .right {
     flex-direction: column;
 }
@@ -32,12 +83,13 @@ div {
     height: 66vh;
 }
 
-#time.big #header {
+#time.big #header, #time.large #header {
     border:none;
     height: 16%;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 #time.big #header div {
@@ -49,12 +101,16 @@ div {
 }
 
 
-#time.big #brightness, #time.big #settings {
-    width: 25%;
+#time.big #brightness, #time.big #volume, #time.big #display, #time.big #settings {
+    width: 12%;
 }
 
 #time #main {
     width: 100%;
+}
+
+#time.big #main #clock {
+    font-size: 5em;
 }
 
 #time.small #header div {
@@ -70,3 +126,32 @@ div {
     width: 65vw;
     height: 33vh;
 }
+
+#alarms .next {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+#alarms .next #nexttime {
+    font-size: 2em
+}
+
+#alarms.small .next {
+    flex-direction: column;
+}
+
+#weather.small .icon {
+    font-size: 3em;
+}
+
+#weather.small .temperature .value {
+    font-size: 1.5em;
+}
+
+#weather.small .temperature .unit {
+    font-size: 1em;
+}
+
