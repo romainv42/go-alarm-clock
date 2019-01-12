@@ -1,0 +1,18 @@
+{
+  "name": "go-alarm-clock",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "mithril": "^1.1.6",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  },
+  "scripts": {
+    "start": "webpack src/index.js --output bin/app.js -d --watch",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC"
+}
