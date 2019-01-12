@@ -4,13 +4,12 @@ import (
 	"log"
 	"net/http"
 
-	"alarm"
+	"github.com/romainv42/go-alarm-clock/alarm"
 )
 
 func main() {
-
+	alarm.Load()
 	http.Handle("/", http.FileServer(http.Dir("./assets")))
 
 	log.Fatal(http.ListenAndServe(":8081", nil))
-	alarm.Load()
 }

@@ -7,8 +7,9 @@ import (
 	"io/ioutil"
 )
 
+// Load Crontab
 func Load() {
-	b, err := ioutil.ReadFile("./crontab.txt")
+	b, err := ioutil.ReadFile("crontab.txt")
 	if err != nil {
 		fmt.Println(err)
 		return
