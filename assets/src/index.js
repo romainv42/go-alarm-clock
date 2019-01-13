@@ -1,4 +1,3 @@
-const { library } = require("@fortawesome/fontawesome-svg-core");
 
 const m = require("mithril");
 import { main } from "./components/main"

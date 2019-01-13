@@ -77,14 +77,39 @@ body.night {
     border: 1px solid #999;
 }
 
+
+@keyframes gobig {
+    from {
+        width: 33vw;
+        height: 33vh;
+    }
+    to   {
+        width: 66vw;
+        height: 66vh;
+    }
+}
+
+@keyframes gosmall {
+    from {
+        width: 66vw;
+        height: 66vh;
+    }
+    to   {
+        width: 33vw;
+        height: 33vh;
+    }
+}
+
 .big {
     width: 66vw;
     height: 66vh;
+    animation: gobig 1s;
 }
 
 .small {
     width: 33vw;
     height: 33vh;
+    animation: gosmall 1s;
 }
 
 .large {
@@ -140,6 +165,15 @@ nav ul li#dateDisplay {
 #ss {
     /* font-family: 'computerfontregular'; */
     font-size: 2.5em;
+}
+
+#hhmm {
+    /* font-family: 'computerfontregular'; */
+    font-size: 4em;
+}
+.small #ss {
+    /* font-family: 'computerfontregular'; */
+    display:none;
 }
 
 /* Alarm Box */

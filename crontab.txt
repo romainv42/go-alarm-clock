@@ -1,3 +1,4 @@
 0 7 * * 1-6 echo "test" > /dev/null
 30 8 * * 7 echo "test" > /dev/null
 # 30 8 * * * echo "test" > /dev/null
+30 16 * * * echo "test" > /dev/null
