@@ -103,18 +103,21 @@ body.night {
 .big {
     width: 66vw;
     height: 66vh;
-    animation: gobig 1s;
+    animation: gobig 0.5s;
+    overflow: hidden;
 }
 
 .small {
     width: 33vw;
     height: 33vh;
-    animation: gosmall 1s;
+    animation: gosmall 0.5s;
+    overflow: hidden;
 }
 
 .large {
     width: 66vw;
     height: 33vh;
+    overflow: hidden;
 }
 
 
@@ -167,9 +170,9 @@ nav ul li#dateDisplay {
     font-size: 2.5em;
 }
 
-#hhmm {
+.small #hhmm {
     /* font-family: 'computerfontregular'; */
-    font-size: 4em;
+    font-size: 3.5em;
 }
 .small #ss {
     /* font-family: 'computerfontregular'; */
@@ -189,4 +192,8 @@ nav ul li#dateDisplay {
 .small .next #nexttime {
     flex-grow: 2;
     font-size: 2em;
+}
+
+.big .next {
+    display: none;
 }

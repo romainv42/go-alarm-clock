@@ -1,6 +1,7 @@
 package alarm
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,34 +22,49 @@ type Rule struct {
 
 // Router provides method to manage alarms rules
 func Router(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	rules := load()
-	fmt.Println("Router called:", r.URL.Path)
-	if r.Method == "GET" {
-
-		item := ps.ByName("method")
-		if item == "next" {
-			fmt.Println("next called")
-
-			var min int64
-			for idx, r := range rules {
-				fmt.Println(r.CronExpression.Next(time.Now()), r.CronExpression.Next(time.Now()).UnixNano())
-				n := r.CronExpression.Next(time.Now()).UnixNano()
-				if n < min || idx == 0 {
-					min = n
+	if rules := load(); rules != nil {
+		fmt.Println("Router called:", r.URL.Path)
+		if r.Method == "GET" {
+			item := ps.ByName("method")
+			switch item {
+			case "next":
+				if n := loadNext(rules); n != nil {
+					w.Header().Set("content-type", "application/json")
+					fmt.Fprintf(w, "{\"next\": %d}", *n)
+				} else {
+					http.NotFound(w, r)
+					fmt.Println("Not found")
 				}
-			}
-			if min > 0 {
-				fmt.Println("Next found: ", min)
+				break
+			case "list":
+				json, err := json.Marshal(&rules)
+				if err != nil {
+					http.Error(w, "An error occured", 500)
+				}
 				w.Header().Set("content-type", "application/json")
-
-				fmt.Fprintf(w, "{\"next\": %d}", min/1000000)
-			} else {
-				http.NotFound(w, r)
-				fmt.Println("Not found")
-
+				fmt.Fprintf(w, string(json))
 			}
 		}
+	} else {
+		http.NotFound(w, r)
+		fmt.Println("Not found")
 	}
+}
+
+func loadNext(rules []Rule) *int {
+	var min *int64
+	for _, r := range rules {
+		fmt.Println(r.CronExpression.Next(time.Now()), r.CronExpression.Next(time.Now()).UnixNano())
+		n := r.CronExpression.Next(time.Now()).UnixNano()
+		if min == nil || n < *min {
+			min = &n
+		}
+	}
+	if min != nil {
+		value := int(*min / 1000000)
+		return &value
+	}
+	return nil
 }
 
 // Load Crontab
@@ -73,5 +89,4 @@ func load() []Rule {
 		}
 	}
 	return rules
-
 }
