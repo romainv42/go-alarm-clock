@@ -1,11 +1,6 @@
 const m = require("mithril");
 
-const refreshingDate = () => {
-  const today = new Date();
-  document.getElementById("dateDisplay").innerText = today.toLocaleDateString();
-  const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDay() + 1, 0, 0, 0, 0);
-  setTimeout(refreshingDate, tomorrow.getTime() - today.getTime());
-};
+const Time = require("../models/realTime");
 
 const menu = () => {
   return {
@@ -14,8 +9,8 @@ const menu = () => {
         m("ul", [
           m("li#dateDisplay", new Date().toLocaleDateString()),
           m("li#switchDisplay", [
-            m("i.fas.fa-moon", {onclick: () => document.body.className = "night" }),
-            m("i.far.fa-sun", {onclick: () => document.body.className = "day" })
+            m("i.fas.fa-moon", { onclick: () => document.body.className = "night" }),
+            m("i.far.fa-sun", { onclick: () => document.body.className = "day" })
           ]),
           m("li#brightness", [
             m("i.fas.fa-adjust")
@@ -29,9 +24,8 @@ const menu = () => {
         ])
       ]);
     },
-    onCreate: () => {
-      refreshingDate();
-      console.log("coucou");
+    oncreate: (vnode) => {
+      Time.init(date => document.getElementById("dateDisplay").innerText = date.toLocaleDateString())
     }
   }
 };
