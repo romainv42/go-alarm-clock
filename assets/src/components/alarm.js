@@ -1,25 +1,7 @@
 const m = require("mithril");
 const { switchDisplay } = require("./utils");
+const Alarms = require("../models/alarm");
 
-
-const Alarms = {
-  loadNext: () => {
-    return m.request({
-      method: "GET",
-      url: "/api/alarm/next"
-    })
-      .then(result => Alarms.next = new Date(result.next))
-  },
-  loadList: () => {
-    return m.request({
-      method: "GET",
-      url: "/api/alarm/list"
-    })
-      .then(result => Alarms.list = result)
-  },
-  list: [],
-  next: null
-}
 
 const alarmBox = () => {
   return {
@@ -27,7 +9,8 @@ const alarmBox = () => {
     view: (vnode) => {
       return m("#alarmBox.small", [
         m("header", [
-          m("i.fas.fa-bell")
+          m("i.fas.fa-bell"),
+          m("span.title")
         ]),
         m(".next", {
           onclick: () => {
@@ -42,10 +25,20 @@ const alarmBox = () => {
             Alarms.next.getMinutes() < 10 ? "0" + Alarms.next.getMinutes() : Alarms.next.getMinutes()
             }`),
         ] : null),
-        m(".list", Alarms.list.map(a => {
-          console.log(a);
-          return;
-        }))
+        m(".list", [
+          m("ul"), Alarms.list.map((a, idx) => {
+            return m("li", a.expression.trim().split(" ").map((e, i) => m("span", e))
+              .concat([
+                m("i", {
+                  class: `${a.enable ? "fas fa-bell" : "far fa-bell-slash"}`,
+                  onclick: () => Alarms.saveState(idx, !a.enable)
+                 }, ""),
+                m("i.far.fa-trash-alt", {
+                  onclick: () => Alarms.remove(idx)
+                })
+              ])
+            )
+          })])
       ]);
     }
   }

@@ -15,13 +15,19 @@ import (
 
 // Rule store cron parse result and other things
 type Rule struct {
+	Source         string `json:"expression"`
 	CronExpression *cronexpr.Expression
-	Enable         bool
-	Special        bool
+	Enable         bool `json:"enable"`
+	Special        bool `json:"special"`
 }
 
-// Router provides method to manage alarms rules
-func Router(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// PutRouter provides API to save alarm informations
+func PutRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+}
+
+// GetRouter provides API to retrieve alarm informations
+func GetRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if rules := load(); rules != nil {
 		fmt.Println("Router called:", r.URL.Path)
 		if r.Method == "GET" {
@@ -54,6 +60,9 @@ func Router(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func loadNext(rules []Rule) *int {
 	var min *int64
 	for _, r := range rules {
+		if !r.Enable {
+			continue
+		}
 		fmt.Println(r.CronExpression.Next(time.Now()), r.CronExpression.Next(time.Now()).UnixNano())
 		n := r.CronExpression.Next(time.Now()).UnixNano()
 		if min == nil || n < *min {
@@ -85,7 +94,7 @@ func load() []Rule {
 				}
 			}()
 			parsed := cronexpr.MustParse(cr)
-			rules = append(rules, Rule{parsed, strings.HasPrefix(cr, "#"), false})
+			rules = append(rules, Rule{cr, parsed, !strings.HasPrefix(row, "#"), false})
 		}
 	}
 	return rules

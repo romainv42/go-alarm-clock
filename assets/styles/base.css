@@ -189,6 +189,24 @@ nav ul li#dateDisplay {
     height: 100%;
 }
 
+#alarmBox header i {
+    margin: 0 4px 2px;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+}
+
+.small .title::before {
+    content: "Prochaine alarme"
+}
+
+.big .title::before {
+    content: "Toutes les alarmes"
+}
+
+
 .small .next #nexttime {
     flex-grow: 2;
     font-size: 2em;
@@ -196,4 +214,27 @@ nav ul li#dateDisplay {
 
 .big .next {
     display: none;
+}
+
+#alarmBox .list ul {
+    margin: 15px 2px;
+}
+
+#alarmBox .list li {
+    margin: 10px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: nowrap;
+}
+
+#alarmBox .list li span {
+    text-align: center;
+    width:20px;
+}
+
+#alarmBox .list li i {
+    text-align: center;
+    width:20px;
 }

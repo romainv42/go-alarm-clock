@@ -14,7 +14,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./assets")))
 	//http.HandleFunc("/api/alarm", alarm.Router)
 	router := httprouter.New()
-	router.GET("/api/alarm/:method", alarm.Router)
+	router.GET("/api/alarm/:method", alarm.GetRouter)
 
 	router.ServeFiles("/src/*filepath", http.Dir("./assets"))
 
