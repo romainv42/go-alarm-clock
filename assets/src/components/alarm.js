@@ -26,7 +26,7 @@ const alarmBox = () => {
             }`),
         ] : null),
         m(".list", [
-          m("ul"), Alarms.list.map((a) => {
+          m("ul", Alarms.list.map((a, idx) => {
             // REMINDER: SS MI HH DM MO DW YR
             const daysOfWeek = [
               "SUN",
@@ -39,24 +39,18 @@ const alarmBox = () => {
             ];
             const subs = [];
             const parts = a.expression.trim().split(" ");
-            if (parts.length === 5) {
-              parts.unshift(0);
-            }
-            if (parts.length === 6) {
-              parts.push("*");
-            }
 
             subs.push(m("span.time", `${
-              parts[2] < 10 ? "0" + parts[2] : parts[2]
+              parts[2] < 10 ? "0" + parts[1] : parts[1]
               }:${
-              parts[1] < 10 ? "0" + parts[1] : parts[1]
+              parts[1] < 10 ? "0" + parts[0] : parts[0]
               }`
             ));
 
-            if (parts[5] === "*") {
-              parts[5] = "0-7";
+            if (parts[4] === "*") {
+              parts[4] = "0-7";
             }
-            const active = [].concat.apply([], parts[5].split(",").map(val => {
+            const active = [].concat.apply([], parts[4].split(",").map(val => {
               const regex = /([0-9]|[A-Z]{3})-([0-9]|[A-Z]{3})/gi;
               const matches = regex.exec(val);
               if (matches) {
@@ -77,11 +71,23 @@ const alarmBox = () => {
             })).filter((v, i, a) => a.indexOf(v) === i);
 
             subs.push(m("ul.recurrent", daysOfWeek.map((_, index) => {
-              return m(`li.day${index}`, { class: active.indexOf(index) > 0 ? "active" : "" }, "")
+              return m(`li.day${index}`, {
+                class: active.indexOf(index) > 0 ? "active" : "",
+                onclick: () => {
+                  const actived = active.indexOf(index);
+                  if (actived < 0) {
+                    active.push(index);
+                  } else {
+                    active.splice(actived, 1);
+                  }
+                  parts[4] = active.join(",");
+                  a.expression = parts.join(" ");
+                  Alarms.save(idx, a);
+                }
+              }, "")
             })));
 
-            return m("li", subs
-              // return m("li", a.expression.trim().split(" ").map((e, i) => m("span", e))
+            return m(`li#row${idx}`, subs
               .concat([
                 m("i", {
                   class: `${a.enable ? "fas fa-bell" : "far fa-bell-slash"}`,
@@ -91,8 +97,8 @@ const alarmBox = () => {
                   onclick: () => Alarms.remove(idx)
                 })
               ]));
-            // )
-          })])
+          }))
+        ])
       ]);
     }
   }

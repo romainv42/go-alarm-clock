@@ -216,8 +216,9 @@ nav ul li#dateDisplay {
     display: none;
 }
 
-#alarmBox .big {
-    overflow: scroll;
+#alarmBox.big {
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #alarmBox .list ul {

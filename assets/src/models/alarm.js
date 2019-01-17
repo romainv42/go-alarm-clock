@@ -21,10 +21,11 @@ const Alarms = {
     Alarms.save(index, row);
   },
   save: (index, data) => {
+    console.log(data);
     return m.request({
-      method: "PUT",
+      method: "POST",
       url: `/api/alarm/save/${index}`,
-      data
+      data: data
     })
       .then(() => Alarms.loadList());
   },
