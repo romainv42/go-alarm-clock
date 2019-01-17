@@ -85,7 +85,7 @@ func load() []Rule {
 	}
 	str := string(b)
 	rules := make([]Rule, 0)
-	regex := regexp.MustCompile("[0-9*/LW -]+(SUN|MON|TUE|WED|THU|FRI|SAT)?")
+	regex := regexp.MustCompile("[0-9*/LW, -]+(SUN|MON|TUE|WED|THU|FRI|SAT)?")
 	for idx, row := range strings.Split(str, "\n") {
 		if cr := regex.FindString(row); cr != "" {
 			defer func() {

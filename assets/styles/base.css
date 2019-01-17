@@ -216,6 +216,10 @@ nav ul li#dateDisplay {
     display: none;
 }
 
+#alarmBox .big {
+    overflow: scroll;
+}
+
 #alarmBox .list ul {
     margin: 15px 2px;
 }
@@ -231,10 +235,50 @@ nav ul li#dateDisplay {
 
 #alarmBox .list li span {
     text-align: center;
-    width:20px;
 }
 
 #alarmBox .list li i {
     text-align: center;
     width:20px;
+}
+#alarmBox .list ul.recurrent {
+    margin: 0;
+}
+
+#alarmBox .recurrent li {
+    border: #aaa solid 1px;
+    
+    display: inline-block;
+    margin: 2px;
+    padding: 2px;
+    border-radius: 20px;
+    width: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#alarmBox .recurrent li.active {
+    background: #aaa;
+}
+
+#alarmBox .recurrent .day0::before {
+    content: "D";
+}
+#alarmBox .recurrent .day1::before {
+    content: "L";
+}
+#alarmBox .recurrent .day2::before {
+    content: "M";
+}
+#alarmBox .recurrent .day3::before {
+    content: "M";
+}
+#alarmBox .recurrent .day4::before {
+    content: "J";
+}
+#alarmBox .recurrent .day5::before {
+    content: "V";
+}
+#alarmBox .recurrent .day6::before {
+    content: "S";
 }
