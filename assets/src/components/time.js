@@ -1,5 +1,4 @@
 const m = require("mithril");
-const utils = require("./utils");
 
 const { menu } = require("./menu");
 
@@ -30,18 +29,20 @@ const realTime = {
   }
 };
 
-const timeBox = () => {
-  return {
-    view: (vnode) => {
-      return m("#timeBox.big", {
-        onclick: () => vnode.dom.className == "small" ? utils.switchDisplay("timeBox") : null }, [
-          m(menu),
-          m(realTime)
-        ]);
-    }
-  }
-};
-
 module.exports = {
-  timeBox
+  small: false,
+  oninit: (vnode) => {
+    vnode.attrs.setObserver("time", (reduce) => {
+      vnode.state.small = reduce;
+    });
+  },
+  view: (vnode) => {
+    return m("#timeBox", {
+      class: `${vnode.state.small ? "small" : "big"}`,
+      onclick: () => vnode.attrs.switch("time")
+    }, [
+        m(menu),
+        m(realTime)
+      ]);
+  }
 };

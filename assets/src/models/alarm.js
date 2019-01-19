@@ -13,7 +13,10 @@ const Alarms = {
       method: "GET",
       url: "/api/alarm/list"
     })
-      .then(result => Alarms.list = result)
+      .then(result => {
+        Alarms.list = result.data;
+        Alarms.checksum = result.checksum;
+      })
   },
   saveState: (index, state) => {
     const row = Alarms.list[index];
@@ -21,14 +24,35 @@ const Alarms = {
     Alarms.save(index, row);
   },
   save: (index, data) => {
-    console.log(data);
+    return m.request({
+      method: "PUT",
+      url: `/api/alarm/${index}`,
+      data: {
+        data,
+        checksum: Alarms.checksum
+      }
+    }).then(() => Alarms.loadList());
+  },
+  insert: (data) => {
     return m.request({
       method: "POST",
-      url: `/api/alarm/save/${index}`,
-      data: data
-    })
-      .then(() => Alarms.loadList());
+      url: `/api/alarm`,
+      data: {
+        data,
+        checksum: Alarms.checksum
+      }
+    }).then(() => Alarms.loadList());
   },
+  remove: (index) => {
+    return m.request({
+      method: "DELETE",
+      url: `/api/alarm/${index}`,
+      data: {
+        checksum: Alarms.checksum
+      }
+    }).then(() => Alarms.loadList());
+  },
+  checksum: null,
   list: [],
   next: null
 };

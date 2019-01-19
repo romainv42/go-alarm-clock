@@ -15,6 +15,9 @@ func main() {
 	//http.HandleFunc("/api/alarm", alarm.Router)
 	router := httprouter.New()
 	router.GET("/api/alarm/:method", alarm.GetRouter)
+	router.PUT("/api/alarm/:rowIndex", alarm.SaveRouter)
+	router.POST("/api/alarm", alarm.SaveRouter)
+	router.DELETE("/api/alarm/:rowIndex", alarm.DeleteRouter)
 
 	router.ServeFiles("/src/*filepath", http.Dir("./assets"))
 
