@@ -5,6 +5,16 @@ const alarmBox = require("./alarm/box");
 const main = () => {
   const modules = [];
   return {
+    oninit: (vnode) => {
+      this.eventSocket = new WebSocket("ws://localhost:8081/ws")
+      this.eventSocket.onopen = () => {
+        this.eventSocket.send("Hello WS Server");
+      };
+      this.eventSocket.onmessage = wsmessage => {
+        const test = JSON.parse(wsmessage.data)
+        alert(test.message);
+      };
+    },
     observer: ((key, f) => {
       modules.push({ key, f });
     }),

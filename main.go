@@ -5,21 +5,24 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-
-	"github.com/romainv42/go-alarm-clock/alarm"
 )
 
 func main() {
 
-	http.Handle("/", http.FileServer(http.Dir("./assets")))
+	//http.Handle("/", http.FileServer(http.Dir("./assets")))
 	//http.HandleFunc("/api/alarm", alarm.Router)
-	router := httprouter.New()
-	router.GET("/api/alarm/:method", alarm.GetRouter)
-	router.PUT("/api/alarm/:rowIndex", alarm.SaveRouter)
-	router.POST("/api/alarm", alarm.SaveRouter)
-	router.DELETE("/api/alarm/:rowIndex", alarm.DeleteRouter)
 
+	router := httprouter.New()
+	router.GET("/api/alarm/:method", AlarmGetRouter)
+	router.PUT("/api/alarm/:rowIndex", AlarmSaveRouter)
+	router.POST("/api/alarm", AlarmSaveRouter)
+	router.DELETE("/api/alarm/:rowIndex", AlarmDeleteRouter)
 	router.ServeFiles("/src/*filepath", http.Dir("./assets"))
+
+	router.POST("/event", EventRouter)
+	router.GET("/ws", ServeWs)
+
+	//http.HandleFunc("/ws", ServeWs)
 
 	log.Fatal(http.ListenAndServe(":8081", router))
 }

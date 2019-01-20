@@ -1,4 +1,4 @@
-package alarm
+package main
 
 import (
 	"encoding/json"
@@ -25,8 +25,8 @@ type Rule struct {
 	Command        string `json:"command"`
 }
 
-// DeleteRouter provides API to remove an alarm
-func DeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// AlarmDeleteRouter provides API to remove an alarm
+func AlarmDeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("Router called:", r.URL.Path)
 
 	var bodyParsed struct {
@@ -69,8 +69,8 @@ func DeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	}
 }
 
-// SaveRouter provides API to save alarm informations
-func SaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// AlarmSaveRouter provides API to save alarm informations
+func AlarmSaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("Router called:", r.URL.Path)
 
 	var bodyParsed struct {
@@ -118,8 +118,8 @@ func SaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 }
 
-// GetRouter provides API to retrieve alarm informations
-func GetRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// AlarmGetRouter provides API to retrieve alarm informations
+func AlarmGetRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if rules := load(); rules != nil {
 		fmt.Println("Router called:", r.URL.Path)
 		item := ps.ByName("method")
