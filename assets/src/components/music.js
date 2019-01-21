@@ -1,9 +1,9 @@
 const m = require("mithril");
-const musicController = require("../services/music");
 
 module.exports = {
-  oninit: () => this.musicController = musicController,
+  oninit: (vnode) => this.musicController = vnode.attrs.musicController,
   view: (vnode) => m("div#audio.small", [
+    m("i.fas.fa-music", { style: "display: \"table-row\""}),
     m("span#previous.control.fas.fa-step-backward", { onclick: () => this.musicController.playPrevious() }),
     this.musicController.isPlaying()
       ? m("span#pause.control.fas.fa-pause", { onclick: () => this.musicController.pause() })

@@ -51,7 +51,7 @@ module.exports = {
       m("a", { onclick: () => this.parent.state.setNew = false }, [m("i.fas.fa-undo"), " Annuler"]),
       m("a", {
         onclick: () => {
-          const expression = `${this.minute} ${this.hour} * * ${this.active.join(",")}`
+          const expression = `${this.minute} ${this.hour} * * ${this.active.length > 0 ? this.active.join(",") : "*"}`
           this.alarmModel.insert({ expression, enable: true, command: "echo \"test\" > /dev/null"})
           this.parent.state.setNew = false;
         }

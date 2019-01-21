@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -30,13 +31,13 @@ func (am *Music) GetMusicRouter(w http.ResponseWriter, r *http.Request, ps httpr
 		am.loadFiles(&files, am.Configuration.MusicBasePath)
 		am.Files = &files
 	}
-	// filename := (*am.Files)[am.Current]
-	// file, error := os.Open(filename)
-	// if error != nil {
-	// 	fmt.Printf("Unable to read file: %s\n", filename)
-	// 	http.Error(w, "An error occured", 500)
-	// 	return
-	// }
+	jsonList, error := json.Marshal(am.Files)
+	if error != nil {
+		fmt.Println("Unable to jsonify files")
+		http.Error(w, "An error occured", 500)
+		return
+	}
+	w.Write(jsonList)
 }
 
 func (am *Music) loadFiles(loaded *[]string, src string) {

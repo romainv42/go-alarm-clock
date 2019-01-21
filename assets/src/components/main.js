@@ -4,6 +4,8 @@ const alarmBox = require("./alarm/box");
 const wakeup = require("./alarm/wakeup");
 const jukeBox = require("./music");
 
+const musicController = require("../services/music");
+
 const websocket = require("../services/websocket");
 
 const main = () => {
@@ -11,7 +13,7 @@ const main = () => {
   return {
     oninit: (vnode) => {
       websocket.subscribe({ kind: "alarm", method: () => {
-        wakeup.show(vnode.state);
+        wakeup.show(vnode.state, musicController);
       }});
     },
     observer: ((key, f) => {
@@ -28,7 +30,7 @@ const main = () => {
       return m(".container", [
         m(timeBox, { setObserver: vnode.state.observer, switch: vnode.state.switch, modal: (modal) => vnode.state.modal = modal }),
         m(alarmBox, { setObserver: vnode.state.observer, switch: vnode.state.switch, modal: (modal) => vnode.state.modal = modal }),
-        m(jukeBox, { setObserver: vnode.state.observer }),
+        m(jukeBox, { setObserver: vnode.state.observer, musicController }),
         vnode.state.modal
       ]);
     }
