@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"os/exec"
 
 	"crypto/sha1"
 
@@ -175,7 +176,9 @@ func (ac *AlarmComponent) loadNext(rules []rule) *int {
 
 // Load Crontab
 func (ac *AlarmComponent) load() []rule {
-	b, err := ioutil.ReadFile("crontab.txt")
+	cmd := exec.Command("crontab", "-l")
+	b, err := cmd.Output()
+	//b, err := ioutil.ReadFile("crontab.txt")
 	if err != nil {
 		fmt.Println(err)
 		return nil
@@ -223,5 +226,11 @@ func (ac *AlarmComponent) save(rules []rule) bool {
 		}
 	}
 	f.Sync()
+	cmd := exec.Command("crontab", "crontab.txt")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
 	return true
 }
