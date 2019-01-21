@@ -9,40 +9,42 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-var (
-	instance *websocket.Conn
-	upgrader = websocket.Upgrader{}
-)
+// WebSocketComponent represents the WebSocket Component
+type WebSocketComponent struct {
+	connection *websocket.Conn
+	upgrader   *websocket.Upgrader
+}
 
-// WSInstance returns the current instance of the WS Connection
-func WSInstance() *websocket.Conn {
-	return instance
+// NewWebSocketComponent initialize the Web Socker Server
+func NewWebSocketComponent() *WebSocketComponent {
+	return &WebSocketComponent{nil, &websocket.Upgrader{}}
 }
 
 // ServeWs provides a route to serve WebSocket
-func ServeWs(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	ws, err := upgrader.Upgrade(w, r, nil)
+func (wsc *WebSocketComponent) ServeWs(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ws, err := wsc.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Println("Unable to start WebSocket server")
 	}
 	fmt.Println("WebSocket server initialized")
-	instance = ws
+	wsc.connection = ws
 }
 
 // EventRouter provides a route to send message through WebSockets
-func EventRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (wsc *WebSocketComponent) EventRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("New Event")
-	var simpleMessage struct {
+	var standardMessage struct {
+		Kind    string `json:"kind"`
 		Message string `json:"message"`
 	}
 
-	error := json.NewDecoder(r.Body).Decode(&simpleMessage)
+	error := json.NewDecoder(r.Body).Decode(&standardMessage)
 	if error != nil {
 		http.Error(w, "Unable to parse body", 400)
 		return
 	}
-	if instance != nil {
+	if wsc.connection != nil {
 		fmt.Println("Instance exists")
-		instance.WriteJSON(simpleMessage)
+		wsc.connection.WriteJSON(standardMessage)
 	}
 }

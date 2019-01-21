@@ -17,16 +17,25 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// Rule store cron parse result and other things
-type Rule struct {
+// rule store cron parse result and other things
+type rule struct {
 	Source         string `json:"expression"`
 	CronExpression *cronexpr.Expression
 	Enable         bool   `json:"enable"`
 	Command        string `json:"command"`
 }
 
-// AlarmDeleteRouter provides API to remove an alarm
-func AlarmDeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// AlarmComponent regroups all necessary command to control the alarm
+type AlarmComponent struct {
+}
+
+// NewAlarmComponent initializes an AlarmComponent
+func NewAlarmComponent() *AlarmComponent {
+	return &AlarmComponent{}
+}
+
+// Delete provides API to remove an alarm
+func (ac *AlarmComponent) Delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("Router called:", r.URL.Path)
 
 	var bodyParsed struct {
@@ -37,7 +46,7 @@ func AlarmDeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		http.Error(w, "Unable to parse body", 400)
 		return
 	}
-	if rules := load(); rules != nil {
+	if rules := ac.load(); rules != nil {
 		index, error := strconv.Atoi(ps.ByName("rowIndex"))
 		if error != nil || index >= len(rules) {
 			http.Error(w, "Bad Parameter", 400)
@@ -57,7 +66,7 @@ func AlarmDeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 			return
 		}
 		rules = append(rules[:index], rules[index+1:]...)
-		if save(rules) {
+		if ac.save(rules) {
 			fmt.Println("Done")
 			w.Header().Set("content-type", "application/json")
 			fmt.Fprintf(w, "{ \"operation\": \"success\" }")
@@ -69,12 +78,12 @@ func AlarmDeleteRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	}
 }
 
-// AlarmSaveRouter provides API to save alarm informations
-func AlarmSaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// Save provides API to save alarm informations
+func (ac *AlarmComponent) Save(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("Router called:", r.URL.Path)
 
 	var bodyParsed struct {
-		Rule     Rule   `json:"data"`
+		Rule     rule   `json:"data"`
 		Checksum string `json:"checksum"`
 	}
 	error := json.NewDecoder(r.Body).Decode(&bodyParsed)
@@ -82,7 +91,7 @@ func AlarmSaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		http.Error(w, "Unable to parse body", 400)
 		return
 	}
-	if rules := load(); rules != nil {
+	if rules := ac.load(); rules != nil {
 		origin, error := json.Marshal(rules)
 		if error != nil {
 			http.Error(w, "An error occured", 500)
@@ -106,7 +115,7 @@ func AlarmSaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 		} else {
 			rules = append(rules, bodyParsed.Rule)
 		}
-		if save(rules) {
+		if ac.save(rules) {
 			fmt.Println("Done")
 			w.Header().Set("content-type", "application/json")
 			fmt.Fprintf(w, "{ \"operation\": \"success\" }")
@@ -118,14 +127,14 @@ func AlarmSaveRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	}
 }
 
-// AlarmGetRouter provides API to retrieve alarm informations
-func AlarmGetRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	if rules := load(); rules != nil {
+// Get provides API to retrieve alarm informations
+func (ac *AlarmComponent) Get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	if rules := ac.load(); rules != nil {
 		fmt.Println("Router called:", r.URL.Path)
 		item := ps.ByName("method")
 		switch item {
 		case "next":
-			if n := loadNext(rules); n != nil {
+			if n := ac.loadNext(rules); n != nil {
 				w.Header().Set("content-type", "application/json")
 				fmt.Fprintf(w, "{\"next\": %d}", *n)
 			} else {
@@ -145,7 +154,7 @@ func AlarmGetRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	}
 }
 
-func loadNext(rules []Rule) *int {
+func (ac *AlarmComponent) loadNext(rules []rule) *int {
 	var min *int64
 	for _, r := range rules {
 		if !r.Enable {
@@ -165,14 +174,14 @@ func loadNext(rules []Rule) *int {
 }
 
 // Load Crontab
-func load() []Rule {
+func (ac *AlarmComponent) load() []rule {
 	b, err := ioutil.ReadFile("crontab.txt")
 	if err != nil {
 		fmt.Println(err)
 		return nil
 	}
 	str := string(b)
-	rules := make([]Rule, 0)
+	rules := make([]rule, 0)
 	regex := regexp.MustCompile("[# ]*[0-9*/LW, -]+(SUN|MON|TUE|WED|THU|FRI|SAT)?")
 	for idx, row := range strings.Split(str, "\n") {
 		if cr := regex.FindString(row); cr != "" {
@@ -186,13 +195,13 @@ func load() []Rule {
 			enabled := !strings.HasPrefix(cr, "#")
 			cr = strings.TrimSpace(strings.Replace(cr, "#", "", 1))
 			parsed := cronexpr.MustParse(cr)
-			rules = append(rules, Rule{cr, parsed, enabled, command})
+			rules = append(rules, rule{cr, parsed, enabled, command})
 		}
 	}
 	return rules
 }
 
-func save(rules []Rule) bool {
+func (ac *AlarmComponent) save(rules []rule) bool {
 	f, error := os.Create("crontab.txt")
 	if error != nil {
 		fmt.Println(error)

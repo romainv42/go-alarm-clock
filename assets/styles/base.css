@@ -60,13 +60,13 @@ body.night, body.night .modal {
 }
 
 .container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    flex-direction: row;
+    grid-auto-flow: row dense;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+    display: grid;
 }
 
 .big, .small, .large {
+    display: block;
     margin: 0;
     padding: 2px;
 }
@@ -103,17 +103,20 @@ body.night, body.night .modal {
 }
 
 .big {
-    width: 66vw;
-    height: 66vh;
-    animation: gobig 0.5s;
-    overflow: hidden;
+	width: 66vw;
+	height: 66vh;
+	animation: gobig 0.5s;
+	overflow: hidden;
+	grid-row: auto / span 2;
+	grid-column: auto / span 2;
 }
-
 .small {
     width: 33vw;
     height: 33vh;
     animation: gosmall 0.5s;
     overflow: hidden;
+	grid-row: auto / span 1;
+    grid-column: auto / span 1;
 }
 
 .large {
@@ -150,6 +153,7 @@ body.night, body.night .modal {
 }
 
 .options {
+    display: inline-flex;
     top: 80%;
     position: absolute;
     left: 50%;
@@ -379,4 +383,38 @@ nav ul li#dateDisplay {
 .selecter .actions a {
     padding: 20px;
     font-size: 1em;
+}
+
+/* WAKE UP */
+@keyframes wakemeup {
+    from {
+        transform: rotate(-30deg)
+    }
+    to {
+        transform: rotate(30deg)
+    }
+}
+
+#wakeup {
+    font-size: 7em;
+    color: #f00;
+    animation: wakemeup 500ms linear 0s infinite alternate;
+}
+
+#audio {
+	display: table;
+}
+#audio .control {
+    display: table-cell;
+    vertical-align: middle;
+    line-height: 50px;
+    text-align: center;
+}
+
+#audio #play, #audio #pause {
+    font-size: 3em;
+}
+
+#audio #previous, #audio #next {
+    font-size: 2em;
 }

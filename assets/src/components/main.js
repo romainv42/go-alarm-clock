@@ -1,19 +1,18 @@
 const m = require("mithril")
 const timeBox = require("./time");
 const alarmBox = require("./alarm/box");
+const wakeup = require("./alarm/wakeup");
+const jukeBox = require("./music");
+
+const websocket = require("../services/websocket");
 
 const main = () => {
   const modules = [];
   return {
     oninit: (vnode) => {
-      this.eventSocket = new WebSocket("ws://localhost:8081/ws")
-      this.eventSocket.onopen = () => {
-        this.eventSocket.send("Hello WS Server");
-      };
-      this.eventSocket.onmessage = wsmessage => {
-        const test = JSON.parse(wsmessage.data)
-        alert(test.message);
-      };
+      websocket.subscribe({ kind: "alarm", method: () => {
+        wakeup.show(vnode.state);
+      }});
     },
     observer: ((key, f) => {
       modules.push({ key, f });
@@ -29,6 +28,7 @@ const main = () => {
       return m(".container", [
         m(timeBox, { setObserver: vnode.state.observer, switch: vnode.state.switch, modal: (modal) => vnode.state.modal = modal }),
         m(alarmBox, { setObserver: vnode.state.observer, switch: vnode.state.switch, modal: (modal) => vnode.state.modal = modal }),
+        m(jukeBox, { setObserver: vnode.state.observer }),
         vnode.state.modal
       ]);
     }
