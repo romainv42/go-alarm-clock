@@ -19,3 +19,5 @@ assets/node_modules/*
 assets/bin/
 
 launcher/launcher
+
+assets/dist/
