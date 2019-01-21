@@ -17,3 +17,5 @@ assets/node_modules/*
 \.vscode/
 
 assets/bin/
+
+launcher/launcher
