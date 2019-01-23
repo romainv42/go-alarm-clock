@@ -5,10 +5,11 @@ default:
 	mkdir -p assets/bin
 	mv ./assets/dist/main.js ./assets/bin/app.js
 	zip -9 -r --exclude=*src* \
-		--exclude=*vendors* \
 		--exclude=*package.json* \
 		--exclude=*package-lock.json* \
 		--exclude=*dist* \
 		--exclude=*node_modules* \
 		--exclude=*.DS_Store* \
 		assets.zip ./assets
+
+	

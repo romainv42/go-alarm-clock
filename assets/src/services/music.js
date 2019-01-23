@@ -88,7 +88,10 @@ module.exports = (() => {
     shuffle(playlist);
   }
 
-  player.addEventListener("onended", () => playNext());
+  player.addEventListener("ended", () => {
+    console.log("Event OnEnded");
+    playNext();
+  });
 
   return {
     alarmPlay,

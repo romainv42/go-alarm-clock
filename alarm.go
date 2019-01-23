@@ -132,7 +132,6 @@ func (ac *AlarmComponent) Save(w http.ResponseWriter, r *http.Request, ps httpro
 // Get provides API to retrieve alarm informations
 func (ac *AlarmComponent) Get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if rules := ac.load(); rules != nil {
-		fmt.Println("Router called:", r.URL.Path)
 		item := ps.ByName("method")
 		switch item {
 		case "next":
@@ -177,15 +176,17 @@ func (ac *AlarmComponent) loadNext(rules []rule) *int {
 
 // Load Crontab
 func (ac *AlarmComponent) load() []rule {
+	rules := make([]rule, 0)
+
 	cmd := exec.Command("crontab", "-l")
 	b, err := cmd.Output()
+
 	//b, err := ioutil.ReadFile("crontab.txt")
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		fmt.Println(err.Error())
+		return rules
 	}
 	str := string(b)
-	rules := make([]rule, 0)
 	regex := regexp.MustCompile("[# ]*[0-9*/LW, -]+(SUN|MON|TUE|WED|THU|FRI|SAT)?")
 	for idx, row := range strings.Split(str, "\n") {
 		if cr := regex.FindString(row); cr != "" {

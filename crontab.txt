@@ -1,2 +1,0 @@
-30 8 * * 1,2,4 echo"test">devnull
-0 6 * * * echo "test" > /dev/null

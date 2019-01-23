@@ -33,8 +33,8 @@ func main() {
 	config := loadConfig()
 
 	router := httprouter.New()
-	wsc := NewWebSocketComponent()
 	ac := NewAlarmComponent()
+	wsc := NewWebSocketComponent()
 	am := NewMusicComponent(config)
 
 	router.GET("/api/alarm/:method", ac.Get)
@@ -50,4 +50,5 @@ func main() {
 	router.ServeFiles("/src/*filepath", http.Dir("./assets"))
 
 	log.Fatal(http.ListenAndServe(":8081", router))
+
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"path"
 	"regexp"
 	"strings"
@@ -27,9 +28,8 @@ func NewMusicComponent(config *Configuration) *Music {
 // GetMusicRouter retrieves the current music file
 func (am *Music) GetMusicRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if am.Files == nil {
-		files := make([]string, 0)
-		am.loadFiles(&files, am.Configuration.MusicBasePath)
-		am.Files = &files
+		am.Files = am.loadFiles(am.Configuration.MusicBasePath)
+		fmt.Printf("%d files added to list\n", len(*am.Files))
 	}
 	jsonList, error := json.Marshal(am.Files)
 	if error != nil {
@@ -40,21 +40,42 @@ func (am *Music) GetMusicRouter(w http.ResponseWriter, r *http.Request, ps httpr
 	w.Write(jsonList)
 }
 
-func (am *Music) loadFiles(loaded *[]string, src string) {
+func (am *Music) loadFiles(src string) *[]string {
+	loaded := make([]string, 0)
+
 	files, error := ioutil.ReadDir(src)
 	if error != nil {
-		fmt.Println("Enable to read dir")
-		return
+		fmt.Println("Unable to read dir")
+		return nil
 	}
 
 	for _, f := range files {
 		if f.IsDir() {
-			am.loadFiles(loaded, path.Join(src, f.Name()))
+			if sub := am.loadFiles(path.Join(src, f.Name())); sub != nil {
+				loaded = append(loaded, *sub...)
+			}
+			continue
+		}
+
+		if f.Mode()&os.ModeSymlink != 0 {
+			symlink, error := os.Readlink(path.Join(src, f.Name()))
+			if error == nil {
+				if symsub := am.loadFiles(symlink); symsub != nil {
+					sub := make([]string, 0)
+					for _, s := range *symsub {
+						sub = append(sub, path.Join(src, f.Name(), strings.Replace(s, symlink, "", 1)))
+					}
+					loaded = append(loaded, sub...)
+				}
+			} else {
+				fmt.Println(error.Error())
+			}
 			continue
 		}
 		regex := regexp.MustCompile("[.](mp3|ogg)$")
 		if regex.MatchString(strings.ToLower(f.Name())) {
-			*loaded = append(*loaded, path.Join(src, f.Name()))
+			loaded = append(loaded, path.Join(src, f.Name()))
 		}
 	}
+	return &loaded
 }
