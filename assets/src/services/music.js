@@ -89,7 +89,6 @@ module.exports = (() => {
   }
 
   player.addEventListener("ended", () => {
-    console.log("Event OnEnded");
     playNext();
   });
 
