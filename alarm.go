@@ -105,6 +105,7 @@ func (ac *AlarmComponent) Save(w http.ResponseWriter, r *http.Request, ps httpro
 			http.Error(w, "Crontab changed. Please reload", 409)
 			return
 		}
+		fmt.Println("Adding a new rule")
 		if paramIndex := ps.ByName("rowIndex"); len(paramIndex) > 0 {
 			index, error := strconv.Atoi(paramIndex)
 			if error != nil || index >= len(rules) {
@@ -207,7 +208,8 @@ func (ac *AlarmComponent) load() []rule {
 func (ac *AlarmComponent) save(rules []rule) bool {
 	f, error := os.Create("crontab.txt")
 	if error != nil {
-		fmt.Println(error)
+		fmt.Println("Unable to open crontab.txt")
+		fmt.Println(error.Error())
 		return false
 	}
 	defer f.Close()
@@ -229,6 +231,7 @@ func (ac *AlarmComponent) save(rules []rule) bool {
 	cmd := exec.Command("crontab", "crontab.txt")
 	err := cmd.Run()
 	if err != nil {
+		fmt.Println("Unable to exec command crontab")
 		fmt.Println(err.Error())
 		return false
 	}
