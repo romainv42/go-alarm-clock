@@ -161,14 +161,13 @@ func (ac *AlarmComponent) loadNext(rules []rule) *int {
 		if !r.Enable {
 			continue
 		}
-		fmt.Println(r.CronExpression.Next(time.Now()), r.CronExpression.Next(time.Now()).UnixNano())
-		n := r.CronExpression.Next(time.Now()).UnixNano()
+		n := r.CronExpression.Next(time.Now()).Unix()
 		if min == nil || n < *min {
 			min = &n
 		}
 	}
 	if min != nil {
-		value := int(*min / 1000000)
+		value := int(*min)
 		return &value
 	}
 	return nil
