@@ -10,6 +10,7 @@ default:
 		--exclude=*dist* \
 		--exclude=*node_modules* \
 		--exclude=*.DS_Store* \
+                --exclude=*portal* \
 		assets.zip ./assets
 
 	

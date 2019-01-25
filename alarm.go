@@ -23,7 +23,7 @@ type rule struct {
 	Source         string `json:"expression"`
 	CronExpression *cronexpr.Expression
 	Enable         bool   `json:"enable"`
-	Command        string `json:"command"`
+	Command        string `json:"-"`
 }
 
 // AlarmComponent regroups all necessary command to control the alarm
@@ -105,6 +105,10 @@ func (ac *AlarmComponent) Save(w http.ResponseWriter, r *http.Request, ps httpro
 			http.Error(w, "Crontab changed. Please reload", 409)
 			return
 		}
+		if bodyParsed.Rule.Command == "" {
+			bodyParsed.Rule.Command = "sh /home/pi/AlarmClock/alarm.sh"
+		}
+
 		fmt.Println("Adding a new rule")
 		if paramIndex := ps.ByName("rowIndex"); len(paramIndex) > 0 {
 			index, error := strconv.Atoi(paramIndex)
@@ -180,7 +184,7 @@ func (ac *AlarmComponent) load() []rule {
 	cmd := exec.Command("crontab", "-l")
 	b, err := cmd.Output()
 
-	//b, err := ioutil.ReadFile("crontab.txt")
+	// b, err := ioutil.ReadFile("crontab.txt")
 	if err != nil {
 		fmt.Println(err.Error())
 		return rules

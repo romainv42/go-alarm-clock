@@ -52,7 +52,7 @@ module.exports = {
       m("a", {
         onclick: () => {
           const expression = `${this.minute} ${this.hour} * * ${this.active.length > 0 ? this.active.join(",") : "*"}`
-          this.alarmModel.insert({ expression, enable: true, command: "./alarm-now"})
+          this.alarmModel.insert({ expression, enable: true })
           this.parent.state.setNew = false;
         }
       }, [
