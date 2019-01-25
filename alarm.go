@@ -155,7 +155,7 @@ func (ac *AlarmComponent) Get(w http.ResponseWriter, r *http.Request, ps httprou
 	}
 }
 
-func (ac *AlarmComponent) loadNext(rules []rule) *int {
+func (ac *AlarmComponent) loadNext(rules []rule) *int64 {
 	var min *int64
 	for _, r := range rules {
 		if !r.Enable {
@@ -167,7 +167,7 @@ func (ac *AlarmComponent) loadNext(rules []rule) *int {
 		}
 	}
 	if min != nil {
-		value := int(*min)
+		value := int64(*min)
 		return &value
 	}
 	return nil
