@@ -2,35 +2,40 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
+	"os"
+	"path"
 
 	"github.com/julienschmidt/httprouter"
 )
 
 // Configuration of the alarm clock
 type Configuration struct {
-	MusicBasePath string `json:"musicBasePath"`
+	StaticFilesPath string `json:"staticFiles"`
+	MusicBasePath   string `json:"musicBasePath"`
 }
 
 func loadConfig() *Configuration {
-	f, err := ioutil.ReadFile("config/config.json")
+	f, err := ioutil.ReadFile("/usr/bin/alarm/config/config.json")
 	if err != nil {
-		fmt.Println("Unable to read config file")
-		return nil
+		panic("Unable to read config file")
 	}
 	var config Configuration
 	if err := json.Unmarshal(f, &config); err != nil {
-		fmt.Println("Unable to parse config file")
+		panic("Unable to parse config file")
 	}
 	return &config
 }
 
 func main() {
-
-	config := loadConfig()
+	goEnv := os.Getenv("GOENV")
+	var config *Configuration
+	if goEnv == "development" {
+		config = &Configuration{path.Join(os.Getenv("PWD"), "assets"), "./music"}
+	} else {
+		config = loadConfig()
+	}
 
 	router := httprouter.New()
 	ac := NewAlarmComponent()
@@ -47,8 +52,9 @@ func main() {
 	router.POST("/event", wsc.EventRouter)
 	router.GET("/ws", wsc.ServeWs)
 
-	router.ServeFiles("/src/*filepath", http.Dir("./assets"))
-
-	log.Fatal(http.ListenAndServe(":8081", router))
+	router.ServeFiles("/src/*filepath", http.Dir(config.StaticFilesPath))
+	if err := http.ListenAndServe(":8081", router); err != nil {
+		panic(err.Error())
+	}
 
 }

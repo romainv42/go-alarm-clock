@@ -1,0 +1,10 @@
+[Unit]
+Description=Launching Alarm Server with systemd, respawn
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/alarm/alarm-server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

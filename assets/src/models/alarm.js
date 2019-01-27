@@ -6,7 +6,7 @@ const Alarms = {
       method: "GET",
       url: "/api/alarm/next"
     })
-      .then(result => Alarms.next = new Date(result.next))
+      .then(result => Alarms.next = new Date(result.next * 1000))
   },
   loadList: () => {
     return m.request({

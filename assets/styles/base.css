@@ -337,7 +337,7 @@ nav ul li#dateDisplay {
 /* New Alarm */
 .selecter {
     display: flex;
-    margin: 10px;
+    margin: 4px;
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -377,7 +377,7 @@ nav ul li#dateDisplay {
     order: 2;
 }
 .selecter .actions {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .selecter .actions a {

@@ -1,0 +1,8 @@
+Package: AlarmClock
+Version: 1.0.0
+Architecture: all
+Essential: no
+Section: web
+Priority: optional
+Maintainer: Romain Viau
+Description: AlarmClock server and client side

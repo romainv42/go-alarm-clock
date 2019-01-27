@@ -28,7 +28,11 @@ func NewMusicComponent(config *Configuration) *Music {
 // GetMusicRouter retrieves the current music file
 func (am *Music) GetMusicRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if am.Files == nil {
-		am.Files = am.loadFiles(am.Configuration.MusicBasePath)
+		musics := make([]string, 0)
+		for _, m := range *am.loadFiles(path.Join(am.Configuration.StaticFilesPath, am.Configuration.MusicBasePath)) {
+			musics = append(musics, strings.Replace(m, am.Configuration.StaticFilesPath, "", -1))
+		}
+		am.Files = &musics
 		fmt.Printf("%d files added to list\n", len(*am.Files))
 	}
 	jsonList, error := json.Marshal(am.Files)

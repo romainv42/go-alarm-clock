@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ "$1" = "remove" ]; then
+rm -rf /usr/bin/alarm
+rm -rf /var/www/*
+systemctl -f stop alarm.service
+systemctl disable /usr/bin/alarm/alarm.service
+systemctl daemon-reload
+unlink /etc/systemd/system/alarm.service
+fi

@@ -1,0 +1,10 @@
+#!/bin/sh
+unzip /var/www/assets.zip -d /var/www
+mv /var/www/assets/* /var/www/ 
+rm -rf /var/www/assets /var/www/assets.zip
+
+ln -s '/usr/bin/alarm/alarm.service' '/etc/systemd/system/alarm.service'
+
+systemctl enable alarm.service
+systemctl start alarm.service
+systemctl daemon-reload

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -106,7 +107,13 @@ func (ac *AlarmComponent) Save(w http.ResponseWriter, r *http.Request, ps httpro
 			return
 		}
 		if bodyParsed.Rule.Command == "" {
-			bodyParsed.Rule.Command = "sh /home/pi/AlarmClock/alarm.sh"
+			var defaultCommand string
+			if os.Getenv("GOENV") == "development" {
+				defaultCommand = path.Join(os.Getenv("PWD"), "alarm.sh")
+			} else {
+				defaultCommand = "/usr/bin/alarm/alarm.sh"
+			}
+			bodyParsed.Rule.Command = fmt.Sprintf("sh %s", defaultCommand)
 		}
 
 		fmt.Println("Adding a new rule")
