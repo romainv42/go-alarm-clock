@@ -16,26 +16,20 @@ import (
 // Music is a class used to load playlist and correct routes
 type Music struct {
 	Configuration *Configuration
-	Files         *[]string
-	Current       int
 }
 
 // NewMusicComponent initiliaze the playlist loader
 func NewMusicComponent(config *Configuration) *Music {
-	return &Music{config, nil, 0}
+	return &Music{config}
 }
 
 // GetMusicRouter retrieves the current music file
 func (am *Music) GetMusicRouter(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	if am.Files == nil {
-		musics := make([]string, 0)
-		for _, m := range *am.loadFiles(path.Join(am.Configuration.StaticFilesPath, am.Configuration.MusicBasePath)) {
-			musics = append(musics, strings.Replace(m, am.Configuration.StaticFilesPath, "", -1))
-		}
-		am.Files = &musics
-		fmt.Printf("%d files added to list\n", len(*am.Files))
+	musics := make([]string, 0)
+	for _, m := range *am.loadFiles(path.Join(am.Configuration.StaticFilesPath, am.Configuration.MusicBasePath)) {
+		musics = append(musics, strings.Replace(m, am.Configuration.StaticFilesPath, "", -1))
 	}
-	jsonList, error := json.Marshal(am.Files)
+	jsonList, error := json.Marshal(&musics)
 	if error != nil {
 		fmt.Println("Unable to jsonify files")
 		http.Error(w, "An error occured", 500)

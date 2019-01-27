@@ -70,8 +70,10 @@ module.exports = (() => {
   };
 
   const play = () => {
-    player.volume = 1;
-    player.play();
+    if (playlist.length() > 0) {
+      player.volume = 1;
+      player.play();
+    }
   };
 
   const pause = () => {

@@ -172,6 +172,11 @@ body.night, body.night .modal {
 .small nav {
     display:none;
 }
+nav {
+    height: 20%;
+    display: flex;
+    align-items: center;
+}
 
 nav ul {
     height: 16%;
@@ -205,7 +210,7 @@ nav ul li#dateDisplay {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 80%;
 }
 
 #hhmm {
