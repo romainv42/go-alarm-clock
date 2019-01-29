@@ -2,7 +2,7 @@ const m = require("mithril");
 
 const { menu } = require("./menu");
 
-const Time = require("../models/realTime");
+const Time = require("../services/realTime");
 
 const realTime = {
   view: (vnode) => {

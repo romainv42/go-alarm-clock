@@ -1,5 +1,5 @@
 const m = require("mithril");
-const Alarms = require("../../models/alarm");
+const Alarms = require("../../services/alarm");
 const next = require("./next");
 const list = require("./list");
 const newAlarm = require("./new");

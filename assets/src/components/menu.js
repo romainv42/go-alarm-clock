@@ -1,6 +1,6 @@
 const m = require("mithril");
 
-const Time = require("../models/realTime");
+const Time = require("../services/realTime");
 
 const menu = () => {
   return {
