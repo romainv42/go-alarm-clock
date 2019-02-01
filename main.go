@@ -42,6 +42,7 @@ func main() {
 	wsc := NewWebSocketComponent()
 	mc := NewMusicComponent(config)
 	sc := NewSettingsComponent()
+	lc := NewLightComponent()
 
 	router.GET("/api/alarm/:method", ac.Get)
 	router.PUT("/api/alarm/:rowIndex", ac.Save)
@@ -52,6 +53,9 @@ func main() {
 
 	router.GET("/api/settings", sc.GetSettingsRouter)
 	router.POST("/api/settings", sc.PostSettingsRouter)
+
+	router.GET("/api/light", lc.GetLightState)
+	router.POST("/api/light", lc.SaveLightState)
 
 	router.POST("/event", wsc.EventRouter)
 	router.GET("/ws", wsc.ServeWs)

@@ -4,6 +4,7 @@ const alarmBox = require("./alarm/box");
 const wakeup = require("./alarm/wakeup");
 const jukeBox = require("./music");
 const settings = require("./settings");
+const light = require("./light");
 
 const musicController = require("../services/music");
 
@@ -37,6 +38,7 @@ const main = () => {
         m(timeBox, { setObserver: vnode.state.observer, switch: vnode.state.switch, modal: (modal) => vnode.state.modal = modal }),
         m(alarmBox, { setObserver: vnode.state.observer, switch: vnode.state.switch, modal: (modal) => vnode.state.modal = modal }),
         m(jukeBox, { setObserver: vnode.state.observer, musicController }),
+        m(light),
         vnode.state.modal
       ]);
     }
