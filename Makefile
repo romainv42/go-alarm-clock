@@ -4,7 +4,6 @@ package:
 	mv alarm-server ./pkg-debian/usr/bin/alarm/
 	mv assets.zip ./pkg-debian/var/www/
 	dpkg -b pkg-debian/ alarm-clock.deb
-	dpkg -b pkg-debian/ alarm-clock.deb
 
 buildServer:
 	GOOS=linux GOARCH=arm go build -o alarm-server
