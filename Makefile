@@ -1,6 +1,9 @@
-default: buildServer buildClient
+default: buildServer buildClient package
+
+package: 
 	mv alarm-server ./pkg-debian/usr/bin/alarm/
 	mv assets.zip ./pkg-debian/var/www/
+	dpkg -b pkg-debian/ alarm-clock.deb
 	dpkg -b pkg-debian/ alarm-clock.deb
 
 buildServer:
