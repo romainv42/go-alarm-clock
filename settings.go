@@ -36,6 +36,11 @@ func (s *Settings) GetSettingsRouter(w http.ResponseWriter, r *http.Request, ps 
 
 	// Load Other settings
 	json, error := json.Marshal(s)
+	if error != nil {
+		fmt.Println("Unable to get settigns")
+		http.Error(w, "An error occured", 500)
+		return
+	}
 	w.Write(json)
 }
 

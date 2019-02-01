@@ -2,6 +2,8 @@ const m = require("mithril");
 
 const Settings = {
   volume: 0,
+  brightness: 0,
+  auto: true,
   load: () => {
     m.request({
       method: "GET",
@@ -9,8 +11,8 @@ const Settings = {
     })
       .then(result => Settings.volume = parseInt(result.volume));
   },
-  save: (v) => {
-    Settings.volume = parseInt(v);
+  save: (item, v) => {
+    Settings[item] = parseInt(v);
     m.request({
       method: "POST",
       url: "/api/settings",

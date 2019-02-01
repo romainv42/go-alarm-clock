@@ -63,7 +63,9 @@ body.night, body.night .modal {
     grid-auto-flow: row dense;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     display: grid;
+    grid-gap: 1px;
 }
+
 
 .big, .small, .large {
     display: block;
@@ -435,10 +437,6 @@ nav ul li#dateDisplay {
     display: none;
 }
 
-.settings h1 {
-    margin-bottom: 20px;
-}
-
 .settings i, .settings input, .settings .switch {
     vertical-align: middle;
 }
@@ -450,7 +448,8 @@ nav ul li#dateDisplay {
 
 .settings i {
     width: 40px;
-    font-size: 2em;
+    font-size: 1.5em;
+    text-align: center;
 }
 
 .settings input.range {

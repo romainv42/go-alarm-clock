@@ -12,14 +12,8 @@ const menu = () => {
             m("i.fas.fa-moon", { onclick: () => document.body.className = "night" }),
             m("i.far.fa-sun", { onclick: () => document.body.className = "day" })
           ]),
-          m("li#brightness", [
-            m("i.fas.fa-adjust")
-          ]),
-          m("li#volume", [
-            m("i.fas.fa-volume-up", { onclick: () => vnode.attrs.switch("volume") })
-          ]),
           m("li#settings", [
-            m("i.fas.fa-cogs")
+            m("i.fas.fa-cogs", { onclick: () => vnode.attrs.switch("settings") })
           ])
         ])
       ]);
