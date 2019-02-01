@@ -105,14 +105,11 @@ func (ls *LightState) init() (*ws2811.WS2811, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	defer dev.Fini()
 	return dev, nil
 }
 
 func (ls *LightState) lightOn() error {
 	for i := 0; i < ledCount; i++ {
-		fmt.Println(i)
 		ls.driver.Leds(0)[i] = 0xffffff
 	}
 	if err := ls.driver.Render(); err != nil {
