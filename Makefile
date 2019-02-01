@@ -1,14 +1,14 @@
-default: buildServer buildClient package
+default: server client package
 
 package: 
 	mv alarm-server ./pkg-debian/usr/bin/alarm/
 	mv assets.zip ./pkg-debian/var/www/
 	dpkg -b pkg-debian/ alarm-clock.deb
 
-buildServer:
+server:
 	GOOS=linux GOARCH=arm go build -o alarm-server
 
-buildClient:
+client:
 	cd assets && npm run build
 	mkdir -p assets/bin
 	mv ./assets/dist/main.js ./assets/bin/app.js
