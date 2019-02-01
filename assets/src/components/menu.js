@@ -4,7 +4,7 @@ const Time = require("../services/realTime");
 
 const menu = () => {
   return {
-    view: () => {
+    view: (vnode) => {
       return m("nav", [
         m("ul", [
           m("li#dateDisplay", new Date().toLocaleDateString()),
@@ -16,7 +16,7 @@ const menu = () => {
             m("i.fas.fa-adjust")
           ]),
           m("li#volume", [
-            m("i.fas.fa-volume-up")
+            m("i.fas.fa-volume-up", { onclick: () => vnode.attrs.switch("volume") })
           ]),
           m("li#settings", [
             m("i.fas.fa-cogs")

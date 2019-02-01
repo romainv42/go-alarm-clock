@@ -70,7 +70,7 @@ module.exports = (() => {
   };
 
   const play = () => {
-    if (playlist.length() > 0) {
+    if (playlist.length > 0) {
       player.volume = 1;
       player.play();
     }

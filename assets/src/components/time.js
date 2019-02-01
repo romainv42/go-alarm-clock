@@ -6,7 +6,7 @@ const Time = require("../services/realTime");
 
 const realTime = {
   view: (vnode) => {
-    return m("div#realtime", [
+    return m("div#realtime", { onclick: () => vnode.attrs.switch("time") }, [
       m("span#hhmm", vnode.state.hhmm),
       m("span#ss", vnode.state.ss)
     ]);
@@ -39,10 +39,10 @@ module.exports = {
   view: (vnode) => {
     return m("#timeBox", {
       class: `${vnode.state.small ? "small" : "big"}`,
-      onclick: () => vnode.attrs.switch("time")
+
     }, [
-        m(menu),
-        m(realTime)
+        m(menu, { switch: vnode.attrs.switch }),
+        m(realTime, { switch: vnode.attrs.switch })
       ]);
   }
 };

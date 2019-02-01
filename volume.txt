@@ -1,0 +1,5 @@
+Simple mixer control 'PCM',0
+  Capabilities: pvolume pvolume-joined pswitch pswitch-joined
+  Playback channels: Mono
+  Limits: Playback -10239 - 400
+  Mono: Playback -1405 [45%] [-14.05dB] [on]

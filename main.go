@@ -40,14 +40,18 @@ func main() {
 	router := httprouter.New()
 	ac := NewAlarmComponent()
 	wsc := NewWebSocketComponent()
-	am := NewMusicComponent(config)
+	mc := NewMusicComponent(config)
+	sc := NewSettingsComponent()
 
 	router.GET("/api/alarm/:method", ac.Get)
 	router.PUT("/api/alarm/:rowIndex", ac.Save)
 	router.POST("/api/alarm", ac.Save)
 	router.DELETE("/api/alarm/:rowIndex", ac.Delete)
 
-	router.GET("/api/music", am.GetMusicRouter)
+	router.GET("/api/music", mc.GetMusicRouter)
+
+	router.GET("/api/settings", sc.GetSettingsRouter)
+	router.POST("/api/settings", sc.PostSettingsRouter)
 
 	router.POST("/event", wsc.EventRouter)
 	router.GET("/ws", wsc.ServeWs)

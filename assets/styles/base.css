@@ -423,3 +423,40 @@ nav ul li#dateDisplay {
 #audio #previous, #audio #next {
     font-size: 2em;
 }
+
+
+/**** SETTINGS ****/
+.settings.big {
+	padding: 20px;
+	height: 100%;
+}
+
+.settings.small {
+    display: none;
+}
+
+.settings h1 {
+    margin-bottom: 20px;
+}
+
+.settings i, .settings input, .settings .switch {
+    vertical-align: middle;
+}
+
+.settings span {
+    margin: 5px;
+    width: 100%;
+}
+
+.settings i {
+    width: 40px;
+    font-size: 2em;
+}
+
+.settings input.range {
+    width: 100%;
+}
+
+.settings .actions {
+    margin-top: 30px;
+}
