@@ -27,7 +27,7 @@ func NewLightComponent() *LightState {
 func (ls *LightState) GetLightState(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	json, error := json.Marshal(ls)
 	if error != nil {
-		fmt.Println("Unable to get volume")
+		fmt.Println("Unable to get light state")
 		http.Error(w, "An error occured", 500)
 		return
 	}
@@ -55,7 +55,7 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 	if temp.Value != ls.Value && temp.On {
 		ls.Value = temp.Value
 		if error := ls.lightOn; error != nil {
-			fmt.Println("Unable to light on")
+			fmt.Println("Unable to change level")
 			http.Error(w, "An error occured", 500)
 			return
 		}
@@ -63,13 +63,13 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 
 	if temp.On != ls.On {
 		if temp.On {
-			if error := ls.lightOn; error != nil {
+			if err := ls.lightOn(); err != nil {
 				fmt.Println("Unable to light on")
 				http.Error(w, "An error occured", 500)
 				return
 			}
 		} else {
-			if error := ls.lightOff; error != nil {
+			if error := ls.lightOff(); error != nil {
 				fmt.Println("Unable to light off")
 				http.Error(w, "An error occured", 500)
 				return
@@ -85,19 +85,26 @@ func (ls *LightState) init() (*ws2811.WS2811, error) {
 	opt := ws2811.DefaultOptions
 	opt.Channels[0].Brightness = ls.Value
 	opt.Channels[0].LedCount = ledCount
-	return ws2811.MakeWS2811(&opt)
+	dev, err := ws2811.MakeWS2811(&opt)
+	if err != nil {
+		return nil,err
+	}
+	return dev, dev.Init()
 }
 
 func (ls *LightState) lightOn() error {
 	drv, err := ls.init()
 	if err != nil {
+		fmt.Println("Unable to init")
 		return err
 	}
 	defer drv.Fini()
 	for i := 0; i < ledCount; i++ {
-		drv.Leds(0)[i] = uint32(0xffffff)
+		fmt.Println(i)
+		drv.Leds(0)[i] = 0xffffff
 	}
 	if err := drv.Render(); err != nil {
+		fmt.Println("Unable to render")
 		return err
 	}
 	ls.On = true
