@@ -12,15 +12,20 @@ import (
 
 // LightState represents currnt light state
 type LightState struct {
-	Value int  `json:"level"`
-	On    bool `json:"isOn"`
+	Value  int  `json:"level"`
+	On     bool `json:"isOn"`
+	driver *ws2811.WS2811
 }
 
 const ledCount = 8 * 32
 
 // NewLightComponent create a new LightComponent and returns its state
 func NewLightComponent() *LightState {
-	return &LightState{64, false}
+	ls := LightState{64, false, nil}
+	if drv, err := ls.init(); err == nil {
+		ls.driver = drv
+	}
+	return &ls
 }
 
 // GetLightState is a router that send current Led Status
@@ -63,7 +68,7 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 
 	if temp.On != ls.On {
 		if temp.On {
-			if err := ls.lightOn(); err != nil {
+			if error := ls.lightOn(); error != nil {
 				fmt.Println("Unable to light on")
 				http.Error(w, "An error occured", 500)
 				return
@@ -87,23 +92,23 @@ func (ls *LightState) init() (*ws2811.WS2811, error) {
 	opt.Channels[0].LedCount = ledCount
 	dev, err := ws2811.MakeWS2811(&opt)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
-	return dev, dev.Init()
+	err = dev.Init()
+	if err != nil {
+		return nil, err
+	}
+
+	defer dev.Fini()
+	return dev, nil
 }
 
 func (ls *LightState) lightOn() error {
-	drv, err := ls.init()
-	if err != nil {
-		fmt.Println("Unable to init")
-		return err
-	}
-	defer drv.Fini()
 	for i := 0; i < ledCount; i++ {
 		fmt.Println(i)
-		drv.Leds(0)[i] = 0xffffff
+		ls.driver.Leds(0)[i] = 0xffffff
 	}
-	if err := drv.Render(); err != nil {
+	if err := ls.driver.Render(); err != nil {
 		fmt.Println("Unable to render")
 		return err
 	}
@@ -112,17 +117,13 @@ func (ls *LightState) lightOn() error {
 }
 
 func (ls *LightState) lightOff() error {
-	drv, err := ls.init()
-	if err != nil {
-		return err
-	}
-	defer drv.Fini()
 	for i := 0; i < ledCount; i++ {
-		drv.Leds(0)[i] = uint32(0x000000)
+		ls.driver.Leds(0)[i] = uint32(0x000000)
 	}
-	if err := drv.Render(); err != nil {
+	if err := ls.driver.Render(); err != nil {
 		return err
 	}
-	ls = &LightState{64, false}
+	ls.On = false
+	ls.Value = 64
 	return nil
 }
