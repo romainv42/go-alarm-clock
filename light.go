@@ -15,15 +15,17 @@ type LightState struct {
 	Value  int  `json:"level"`
 	On     bool `json:"isOn"`
 	driver *ws2811.WS2811
+	Active bool `json:"active"`
 }
 
 const ledCount = 8 * 32
 
 // NewLightComponent create a new LightComponent and returns its state
 func NewLightComponent() *LightState {
-	ls := LightState{64, false, nil}
+	ls := LightState{64, false, nil, false}
 	if drv, err := ls.init(); err == nil {
 		ls.driver = drv
+		ls.Active = true
 	}
 	return &ls
 }
@@ -41,11 +43,16 @@ func (ls *LightState) GetLightState(w http.ResponseWriter, r *http.Request, ps h
 
 // SaveLightState is a router that send current Led Status
 func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	if !ls.Active {
+		http.Error(w, "Inactive", 400)
+		return
+	}
+
 	var temp LightState
 	if error := json.NewDecoder(r.Body).Decode(&temp); error != nil {
 		fmt.Println(error.Error())
 		fmt.Println("Unable to parse json")
-		http.Error(w, "An error occured", 500)
+		http.Error(w, "An error occured", 400)
 		return
 	}
 

@@ -1,7 +1,7 @@
 const m = require("mithril");
 
 const Light = {
-  state: { isOn: false, level: 64 },
+  state: { isOn: false, level: 64, active: false },
   load: () => {
     return m.request({
       method: "GET",
@@ -12,6 +12,7 @@ const Light = {
       });
   },
   switch: () => {
+    if (!Light.state.active) return;
     Light.state.isOn = !Light.state.isOn;
     Light.save();
   },
