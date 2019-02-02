@@ -56,8 +56,8 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 	}
 
 	var temp LightState
-	if error := json.NewDecoder(r.Body).Decode(&temp); error != nil {
-		fmt.Println(error.Error())
+	if err := json.NewDecoder(r.Body).Decode(&temp); err != nil {
+		fmt.Println(err.Error())
 		fmt.Println("Unable to parse json")
 		http.Error(w, "An error occured", 400)
 		return
@@ -73,24 +73,24 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 
 	if temp.Value != ls.Value && temp.On {
 		ls.Value = temp.Value
-		if error := ls.lightOn(); error != nil {
+		if err := ls.lightOn(); err != nil {
 			fmt.Println("Unable to change level")
-			http.Error(w, "An error occured", 500)
+			http.Error(w, "An err occured", 500)
 			return
 		}
 	}
 
 	if temp.On != ls.On {
 		if temp.On {
-			if error := ls.lightOn(); error != nil {
+			if err := ls.lightOn(); err != nil {
 				fmt.Println("Unable to light on")
-				http.Error(w, "An error occured", 500)
+				http.Error(w, "An err occured", 500)
 				return
 			}
 		} else {
-			if error := ls.lightOff(); error != nil {
+			if err := ls.lightOff(); err != nil {
 				fmt.Println("Unable to light off")
-				http.Error(w, "An error occured", 500)
+				http.Error(w, "An err occured", 500)
 				return
 			}
 		}
