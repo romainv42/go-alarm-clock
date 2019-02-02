@@ -18,6 +18,13 @@ type LightState struct {
 	Active bool `json:"active"`
 }
 
+// Color is a struct to convert Hexadecimal value to RGB int values
+type Color struct {
+	R uint32
+	G uint32
+	B uint32
+}
+
 const ledCount = 8 * 32
 
 // NewLightComponent create a new LightComponent and returns its state
@@ -66,7 +73,7 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 
 	if temp.Value != ls.Value && temp.On {
 		ls.Value = temp.Value
-		if error := ls.lightOn; error != nil {
+		if error := ls.lightOn(); error != nil {
 			fmt.Println("Unable to change level")
 			http.Error(w, "An error occured", 500)
 			return
@@ -109,8 +116,9 @@ func (ls *LightState) init() (*ws2811.WS2811, error) {
 }
 
 func (ls *LightState) lightOn() error {
+	c := ls.calcBightness(0xffffff)
 	for i := 0; i < ledCount; i++ {
-		ls.driver.Leds(0)[i] = 0xffffff
+		ls.driver.Leds(0)[i] = c
 	}
 	if err := ls.driver.Render(); err != nil {
 		fmt.Println("Unable to render")
@@ -130,4 +138,29 @@ func (ls *LightState) lightOff() error {
 	ls.On = false
 	ls.Value = 64
 	return nil
+}
+
+func hexToColor(h uint32) *Color {
+	b := h % 256
+	g := (h >> 8) % 256
+	r := (h >> 16) % 256
+	return &Color{r, g, b}
+}
+
+func (ls *LightState) calcBightness(v uint32) uint32 {
+	c := hexToColor(v)
+	c.R = uint32(float32(c.R) * (float32(ls.Value) / 255))
+	c.G = uint32(float32(c.G) * (float32(ls.Value) / 255))
+	c.B = uint32(float32(c.B) * (float32(ls.Value) / 255))
+	return colorToHex(c)
+}
+
+func colorToHex(c *Color) uint32 {
+	if c == nil {
+		return 0x000000
+	}
+	h := c.R
+	h = (h << 8) + c.G
+	h = (h << 8) + c.B
+	return h
 }
