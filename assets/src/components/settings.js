@@ -25,7 +25,8 @@ module.exports = {
       m("input#volume-range.range", { type: "range", min:1, max: 10, value: Settings.Brightness, onchange: (e) => Settings.save("brightness", e.target.value) })
     ]),
     m(".actions", [
-      m("button", { onclick: () => { vnode.attrs.switch("time") } }, "Fermer")
+      m("button", { onclick: () => { vnode.attrs.switch("time") } }, "Fermer"),
+      m("button", { onclick: () => location.reload() }, "Recharger")
     ])
   ])
 };
