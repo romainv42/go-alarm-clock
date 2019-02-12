@@ -22,7 +22,21 @@ html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,ifr
     font-weight: normal;
     font-style: normal;
 }
-
+@font-face {
+    font-family: 'woofey';
+    src: url('/src/fonts/the_woofey_script-webfont.woff2') format('woff2'),
+        url('/src/fonts/the_woofey_script-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'scary';
+    src: url('/src/fonts/scary_halloween_font-webfont.woff2') format('woff2'),
+    url('/src/fonts/scary_halloween_font-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    }
+    
 @keyframes gotoday {
     from   {
         background-color: #000;
