@@ -103,7 +103,7 @@ func (ls *LightState) SaveLightState(w http.ResponseWriter, r *http.Request, ps 
 func (ls *LightState) init() (*ws2811.WS2811, error) {
 	opt := ws2811.DefaultOptions
 	opt.Channels[0].GpioPin = 12
-	opt.Channels[0].Brightness = 136
+	opt.Channels[0].Brightness = 150
 	opt.Channels[0].LedCount = ledCount
 	dev, err := ws2811.MakeWS2811(&opt)
 	if err != nil {

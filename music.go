@@ -43,7 +43,7 @@ func (am *Music) loadFiles(src string) *[]string {
 
 	files, error := ioutil.ReadDir(src)
 	if error != nil {
-		fmt.Println("Unable to read dir")
+		fmt.Print("Unable to read dir: %s\n", src)
 		return nil
 	}
 
